@@ -1,0 +1,69 @@
+{
+    "name": "coquibot/coqui-toolkit-mysql-admin",
+    "description": "MySQL database administration toolkit for Coqui — connect, query, manage schemas, backup/restore, optimize, user management, and NiFi pipeline template generation for MySQL databases",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Carmelo Santana",
+            "email": "git@carmelosantana.com"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "ext-pdo_mysql": "*"
+    },
+    "require-dev": {
+        "carmelosantana/php-agents": "^0.7",
+        "pestphp/pest": "^3.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "suggest": {
+        "doctrine/dbal": "For enhanced schema introspection, diff, and migration generation (^4.4)",
+        "carmelosantana/php-nifi-pipelines": "For generating NiFi pipeline templates (^0.1)"
+    },
+    "autoload": {
+        "psr-4": {
+            "CoquiBot\\Toolkits\\MysqlAdmin\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CoquiBot\\Toolkits\\MysqlAdmin\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "analyse": "phpstan analyse"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "extra": {
+        "php-agents": {
+            "toolkits": [
+                "CoquiBot\\Toolkits\\MysqlAdmin\\MysqlAdminToolkit"
+            ],
+            "description": "Full MySQL database administration — connect to multiple servers, execute queries, manage schemas, backup/restore via mysqldump, optimize, manage users/privileges, and generate NiFi pipeline templates",
+            "credentials": {
+                "MYSQL_HOST": "MySQL server hostname (e.g. localhost, db.example.com)",
+                "MYSQL_PORT": {"description": "MySQL server port (default: 3306)", "optional": true},
+                "MYSQL_USER": "MySQL username for authentication",
+                "MYSQL_PASSWORD": "MySQL password for authentication",
+                "MYSQL_DATABASE": {"description": "Default MySQL database to connect to", "optional": true}
+            },
+            "gated": {
+                "mysql_schema_modify": ["drop_table", "drop_index", "drop_view", "drop_database"],
+                "mysql_backup_restore": ["restore", "clone"],
+                "mysql_query": [{"write": true}],
+                "mysql_user": ["create", "drop", "grant", "revoke", "set_password"],
+                "mysql_optimize": ["repair", "flush"]
+            }
+        }
+    }
+}
