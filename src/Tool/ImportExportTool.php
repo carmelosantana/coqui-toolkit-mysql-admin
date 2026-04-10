@@ -227,7 +227,7 @@ final readonly class ImportExportTool
             $values = array_map(fn(string $col): mixed => $row[$col] ?? null, $columns);
             $values = array_map(fn(mixed $v): mixed => is_array($v) ? json_encode($v) : $v, $values);
 
-            $stmt->execute(array_values($values));
+            $stmt->execute($values);
             $rowCount++;
 
             if ($rowCount % self::BATCH_SIZE === 0) {
